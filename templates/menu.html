@@ -1,8 +1,25 @@
 <html>
     <head>
-        <title>Menu</title>
+        <title>Menu Items</title>
     </head>
     <body>
-        <h1>This page shows a menu of a restaurant</h1>
+        <h1>Restaurant: {{restaurant.name}}</h1>
+
+        <button><a href = '{{url_for('newMenuItem', restaurant_id = restaurant.id) }}'>Create New Item</a></button> 
+        {% if items %}
+          
+        <ul>
+        {% for item in items %}
+            <li> <strong> {{ item.name }} </strong> </li><br>
+            <strong> Price: {{ item.price }} </strong> <br>
+            <strong> Description: {{ item.description }} </strong><br>
+            <strong> Course: {{ item.course }} </strong><br>
+            <button><a href='{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}' >Edit</a></button> 
+            <button><a href='{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}' >Delete</a></button>
+            <br><br><br>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        <br>
     </body>
 </html>
