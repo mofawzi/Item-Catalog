@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 
 
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -12,7 +12,7 @@ app = Flask(__name__)
 def showRestaurants():
     """This method should retrieve all restaurants
     from the database and show them to the users"""
-    return 'This is the main page'
+    return render_template('restaurants.html')
 
 
 # Create restaurant route
@@ -22,7 +22,7 @@ def showRestaurants():
 def newRestaurant():
     """This method should Create a new restaurant
     and save it to the database"""
-    return 'New restaurant is created!'
+    return render_template('newRestaurant.html')
 
 
 # Edit restaurant route
@@ -32,7 +32,7 @@ def newRestaurant():
 def editRestaurant(restaurant_id):
     """This method should Update or Edit a restaurant
     and save the changes to the database"""
-    return 'The restaurant is updated!'
+    return render_template('editRestaurant.html')
 
 
 # Delete restaurant route
@@ -41,7 +41,7 @@ def editRestaurant(restaurant_id):
     methods=['GET', 'POST', 'Delete'])
 def deleteRestaurant(restaurant_id):
     """This method should Delete a restaurant from the database"""
-    return 'The restaurant is deleted!'
+    return render_template('deleteRestaurant.html')
 
 
 # Show the menu of a restaurant route
@@ -54,7 +54,7 @@ def deleteRestaurant(restaurant_id):
 def showMenu(restaurant_id):
     """This method should retrieve all the menu items
     of a restaurants from the database and show them to the users"""
-    return 'This is a menu of a restaurant'
+    return render_template('menu.html')
 
 
 # Create new menu item route
@@ -64,7 +64,7 @@ def showMenu(restaurant_id):
 def newMenuItem(restaurant_id):
     """This method should Create a new menu item for a restaurant
     and save it to the database"""
-    return 'New menu item is created!'
+    return render_template('newMenu.html')
 
 
 # Edit a menu item route
@@ -74,7 +74,7 @@ def newMenuItem(restaurant_id):
 def editMenuItem(restaurant_id, menu_id):
     """This method should Update or Edit a menu item of a restaurant
     and save the changes to the database"""
-    return 'The menu item is updated!'
+    return render_template('editMenu.html')
 
 
 # Delete a menu item route
@@ -84,7 +84,7 @@ def editMenuItem(restaurant_id, menu_id):
 def deleteMenuItem(restaurant_id, menu_id):
     """This method should Delete a menu item of a restaurant
     from the database"""
-    return 'The menu item is deleted!'
+    return render_template('deleteMenu.html')
 
 
 if __name__ == '__main__':
