@@ -5,21 +5,30 @@
     <body>
         <h1>Restaurants</h1>
 
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <h3>
+                {% with message = messages[messages.__len__() - 1] %}
+                    <strong>{{message}}</strong>
+                {% endwith %}
+            </h3>
+        {% endif %}
+        {% endwith %}
+
         <button><a href="{{url_for('newRestaurant')}}" > <h3> Create Restaurant </h3></a></button> 
         
         {% if restaurants %}
-          
-        <ul>
-        {% for restaurant in restaurants %}
-            <!-- <li> <strong> {{ restaurant.name }} </strong> </li> -->
-            <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
+            <ul>
+                {% for restaurant in restaurants %}
+                    <!-- <li> <strong> {{ restaurant.name }} </strong> </li> -->
+                    <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
 
-            <a href = "{{url_for('editRestaurant',restaurant_id = restaurant.id)}}">Edit</a> | 
-            
-            <a href = "{{url_for('deleteRestaurant',restaurant_id = restaurant.id)}}">Delete</a>
-            
-        {% endfor %}
-        </ul>
+                    <a href = "{{url_for('editRestaurant',restaurant_id = restaurant.id)}}">Edit</a> | 
+                    
+                    <a href = "{{url_for('deleteRestaurant',restaurant_id = restaurant.id)}}">Delete</a>
+                    
+                {% endfor %}
+            </ul>
         {% endif %}
     </body>
 </html>

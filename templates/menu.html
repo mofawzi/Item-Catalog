@@ -5,20 +5,31 @@
     <body>
         <h1>Restaurant: {{restaurant.name}}</h1>
 
-        <button><a href = '{{url_for('newMenuItem', restaurant_id = restaurant.id) }}'>Create New Item</a></button> 
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+            <h3>
+                {% with message = messages[messages.__len__() - 1] %}
+                    <strong>{{message}}</strong>
+                {% endwith %}
+            </h3>
+        {% endif %}
+        {% endwith %}
+
+        <button><a href = '{{url_for('newMenuItem', restaurant_id = restaurant.id) }}'>Add New Item</a></button> 
+
         {% if items %}
-          
-        <ul>
-        {% for item in items %}
-            <li> <strong> {{ item.name }} </strong> </li><br>
-            <strong> Price: {{ item.price }} </strong> <br>
-            <strong> Description: {{ item.description }} </strong><br>
-            <strong> Course: {{ item.course }} </strong><br>
-            <button><a href='{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}' >Edit</a></button> 
-            <button><a href='{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}' >Delete</a></button>
-            <br><br><br>
-        {% endfor %}
-        </ul>
+            <ul>
+                {% for item in items %}
+                    <li> <strong> {{ item.name }} </strong> </li><br>
+                    <strong> Price: {{ item.price }} </strong> <br>
+                    <strong> Description: {{ item.description }} </strong><br>
+                    <strong> Course: {{ item.course }} </strong><br>
+                    <button><a href='{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}' >Edit</a></button> 
+                    <button><a href='{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}' >Delete</a></button>
+                    <br><br><br>
+                {% endfor %}
+            </ul>
         {% endif %}
         <br>
     </body>
