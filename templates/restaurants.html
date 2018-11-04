@@ -15,18 +15,23 @@
         {% endif %}
         {% endwith %}
 
-        <button><a href="{{url_for('newRestaurant')}}" > <h3> Create Restaurant </h3></a></button> 
+        <button><a href="{{url_for('newRestaurant')}}" > <h3> Create Restaurant </h3></a></button><br><br>
+
+        <button><a href = '{{url_for('restaurantsJSON') }}'>JSON View</a></button> 
         
         {% if restaurants %}
             <ul>
                 {% for restaurant in restaurants %}
                     <!-- <li> <strong> {{ restaurant.name }} </strong> </li> -->
-                    <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
+                    <li>
+                        <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
 
-                    <a href = "{{url_for('editRestaurant',restaurant_id = restaurant.id)}}">Edit</a> | 
-                    
-                    <a href = "{{url_for('deleteRestaurant',restaurant_id = restaurant.id)}}">Delete</a>
-                    
+                        <a href = "{{url_for('editRestaurant',restaurant_id = restaurant.id)}}">Edit</a> | 
+                        
+                        <a href = "{{url_for('deleteRestaurant',restaurant_id = restaurant.id)}}">Delete</a> | 
+
+                        <a href = "{{url_for('restaurantJSON',restaurant_id = restaurant.id)}}">JSON</a>
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}

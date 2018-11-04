@@ -2,7 +2,7 @@
 
 
 from flask import Flask, render_template, request, redirect, url_for
-from flask import flash
+from flask import flash, jsonify
 
 
 # Database imports
@@ -26,8 +26,8 @@ session = DBSession()
 @app.route('/', methods=['GET'])
 @app.route('/restaurants')
 def showRestaurants():
-    """This method should retrieve all restaurants
-    from the database and show them to the users"""
+    """ This method should retrieve all restaurants
+    from the database and show them to the users """
 
     restaurants = session.query(Restaurant)
     return render_template('restaurants.html', restaurants=restaurants)
@@ -38,8 +38,8 @@ def showRestaurants():
     '/restaurant/new',
     methods=['GET', 'POST'])
 def newRestaurant():
-    """This method should Create a new restaurant
-    and save it to the database"""
+    """ This method should Create a new restaurant
+    and save it to the database """
 
     if request.method == 'POST':
         newRestaurant = Restaurant(
@@ -47,7 +47,9 @@ def newRestaurant():
 
         session.add(newRestaurant)
         session.commit()
-        flash('Restaurant " %s " is Successfully Created!' % newRestaurant.name)
+        flash(
+            'Restaurant " %s " is Successfully Created!'
+            % newRestaurant.name)
         return redirect(url_for('showRestaurants'))
     else:
         return render_template('newRestaurant.html')
@@ -58,8 +60,8 @@ def newRestaurant():
     '/restaurant/<int:restaurant_id>/edit',
     methods=['GET', 'POST'])
 def editRestaurant(restaurant_id):
-    """This method should Update or Edit a restaurant
-    and save the changes to the database"""
+    """ This method should Update or Edit a restaurant
+    and save the changes to the database """
 
     editedRestaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
@@ -69,7 +71,9 @@ def editRestaurant(restaurant_id):
             editedRestaurant.name = request.form['name']
         session.add(editedRestaurant)
         session.commit()
-        flash('Restaurant " %s " is Successfully Edited!' % editedRestaurant.name)
+        flash(
+            'Restaurant " %s " is Successfully Edited!'
+            % editedRestaurant.name)
         return redirect(url_for('showRestaurants'))
     else:
         return render_template(
@@ -81,7 +85,7 @@ def editRestaurant(restaurant_id):
     '/restaurant/<int:restaurant_id>/delete',
     methods=['GET', 'POST', 'Delete'])
 def deleteRestaurant(restaurant_id):
-    """This method should Delete a restaurant from the database"""
+    """ This method should Delete a restaurant from the database """
 
     deletedRestaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
@@ -89,7 +93,9 @@ def deleteRestaurant(restaurant_id):
     if request.method == 'POST':
         session.delete(deletedRestaurant)
         session.commit()
-        flash('Restaurant " %s " is Successfully Deleted!' % deletedRestaurant.name)
+        flash(
+            'Restaurant " %s " is Successfully Deleted!'
+            % deletedRestaurant.name)
         return redirect(url_for('showRestaurants'))
     else:
         return render_template(
@@ -104,8 +110,8 @@ def deleteRestaurant(restaurant_id):
     '/restaurant/<int:restaurant_id>/menu/',
     methods=['GET', 'POST'])
 def showMenu(restaurant_id):
-    """This method should retrieve all the menu items
-    of a restaurants from the database and show them to the users"""
+    """ This method should retrieve all the menu items
+    of a restaurants from the database and show them to the users """
 
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
@@ -121,8 +127,8 @@ def showMenu(restaurant_id):
     '/restaurant/<int:restaurant_id>/menu/new',
     methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
-    """This method should Create a new menu item for a restaurant
-    and save it to the database"""
+    """ This method should Create a new menu item for a restaurant
+    and save it to the database """
 
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
@@ -149,8 +155,8 @@ def newMenuItem(restaurant_id):
     '/restaurant/<int:restaurant_id>/menu/<int:menu_id>/edit',
     methods=['GET', 'POST', 'PUT'])
 def editMenuItem(restaurant_id, menu_id):
-    """This method should Update or Edit a menu item of a restaurant
-    and save the changes to the database"""
+    """ This method should Update or Edit a menu item of a restaurant
+    and save the changes to the database """
 
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
@@ -178,8 +184,8 @@ def editMenuItem(restaurant_id, menu_id):
     '/restaurant/<int:restaurant_id>/menu/<int:menu_id>/delete',
     methods=['GET', 'POST', 'Delete'])
 def deleteMenuItem(restaurant_id, menu_id):
-    """This method should Delete a menu item of a restaurant
-    from the database"""
+    """ This method should Delete a menu item of a restaurant
+    from the database """
 
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
@@ -195,6 +201,49 @@ def deleteMenuItem(restaurant_id, menu_id):
     else:
         return render_template(
             'deleteMenuItem.html', restaurant=restaurant, item=deletedItem)
+
+
+# API Endpoints
+
+# JSON route for all restaurants
+@app.route('/restaurants/JSON')
+def restaurantsJSON():
+    """ Method to provide all restaurants as a JSON object """
+
+    restaurants = session.query(Restaurant)
+    return jsonify(Restaurants=[i.serialize for i in restaurants])
+
+
+# JSON route for a specific restaurant
+@app.route('/restaurants/<int:restaurant_id>/JSON')
+def restaurantJSON(restaurant_id):
+    """ Method to provide a specific restaurant as a JSON object """
+
+    restaurant = session.query(Restaurant).filter_by(
+        id=restaurant_id).one()
+    return jsonify(Restaurant=restaurant.serialize)
+
+
+# JSON route for all menu items
+@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
+def restaurantMenuJSON(restaurant_id):
+    """ Method to provide all menu items
+    of a restaurant as a JSON object """
+
+    items = session.query(MenuItem).filter_by(
+        restaurant_id=restaurant_id).all()
+    return jsonify(MenuItems=[i.serialize for i in items])
+
+
+# JSON route for a specific menu item
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/JSON')
+def menuItemJSON(restaurant_id, menu_id):
+    """ Method to provide a specific menu item
+    of a restaurant as a JSON object """
+
+    item = session.query(MenuItem).filter_by(
+        id=menu_id).one()
+    return jsonify(MenuItem=item.serialize)
 
 
 if __name__ == '__main__':
