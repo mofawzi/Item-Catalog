@@ -58,7 +58,9 @@ def showLogin():
 def gconnect():
     """ This method allows the user to login using google plus """
     # Validate state token
+    # The token sent from the user should be the same as the token sent from the server
     if request.args.get('state') != login_session['state']:
+        # The tokens is not match
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -139,6 +141,40 @@ def gconnect():
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
+
+
+# Disconnect route => Logout
+@app.route('/gdisconnect')
+def gdisconnect():
+    # Only disconnect a connected user.
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        print 'Access Token is None'
+        response = make_response(
+            json.dumps('Current user is not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    # Revoke current token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+
+    if result['status'] == '200':
+        # Reset user's session
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        # Token is invalid
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 
 # Get all restaurants route
