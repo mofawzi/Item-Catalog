@@ -196,6 +196,9 @@ def newRestaurant():
     """ This method should Create a new restaurant
     and save it to the database """
 
+    if 'username' not in login_session:
+        return redirect('/login')
+
     if request.method == 'POST':
         newRestaurant = Restaurant(
             name=request.form['name'])
@@ -218,6 +221,9 @@ def editRestaurant(restaurant_id):
     """ This method should Update or Edit a restaurant
     and save the changes to the database """
 
+    if 'username' not in login_session:
+        return redirect('/login')
+        
     editedRestaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
@@ -242,6 +248,9 @@ def editRestaurant(restaurant_id):
 def deleteRestaurant(restaurant_id):
     """ This method should Delete a restaurant from the database """
 
+    if 'username' not in login_session:
+        return redirect('/login')
+        
     deletedRestaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
@@ -285,6 +294,9 @@ def newMenuItem(restaurant_id):
     """ This method should Create a new menu item for a restaurant
     and save it to the database """
 
+    if 'username' not in login_session:
+        return redirect('/login')
+        
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
@@ -313,6 +325,9 @@ def editMenuItem(restaurant_id, menu_id):
     """ This method should Update or Edit a menu item of a restaurant
     and save the changes to the database """
 
+    if 'username' not in login_session:
+        return redirect('/login')
+        
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
@@ -342,6 +357,9 @@ def deleteMenuItem(restaurant_id, menu_id):
     """ This method should Delete a menu item of a restaurant
     from the database """
 
+    if 'username' not in login_session:
+        return redirect('/login')
+        
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
