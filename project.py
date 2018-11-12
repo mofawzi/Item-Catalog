@@ -8,7 +8,7 @@ from flask import flash, jsonify
 # Database imports
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Restaurant, MenuItem, User
 
 # Login imports
 from flask import session as login_session
