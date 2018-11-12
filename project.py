@@ -33,7 +33,7 @@ APPLICATION_NAME = "Restaurant Menu Application"
 app = Flask(__name__)
 
 # Create the database engine
-engine = create_engine('sqlite:///restaurantsmenu.db?check_same_thread=False')
+engine = create_engine('sqlite:///restaurantmenuwithusers.db?check_same_thread=False')
 Base.metadata.bind = engine
 
 # Create the database session to apply CRUD
@@ -332,7 +332,7 @@ def editMenuItem(restaurant_id, menu_id):
         id=restaurant_id).one()
 
     editedItem = session.query(MenuItem).filter_by(
-        id=menu_id).one()
+        id=menu_id, restaurant_id=restaurant.id).one()
 
     if request.method == 'POST':
         editedItem.name = request.form['name']
@@ -364,7 +364,7 @@ def deleteMenuItem(restaurant_id, menu_id):
         id=restaurant_id).one()
 
     deletedItem = session.query(MenuItem).filter_by(
-        id=menu_id).one()
+        id=menu_id, restaurant_id=restaurant.id).one()
 
     if request.method == 'POST':
         session.delete(deletedItem)
