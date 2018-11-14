@@ -25,20 +25,52 @@ import requests
 
 # Create client Id
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Restaurant Menu Application"
+    open('secrets.json', 'r').read())['web']['client_id']
+APPLICATION_NAME = "Item Catalog"
 
 
 # Use the Flask framework
 app = Flask(__name__)
 
 # Create the database engine
-engine = create_engine('sqlite:///restaurantmenuwithusers.db?check_same_thread=False')
+engine = create_engine(
+    'sqlite:///restaurantmenuwithusers.db?check_same_thread=False')
 Base.metadata.bind = engine
 
 # Create the database session to apply CRUD
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+
+# User Helper Functions
+
+def createUser(login_session):
+    """ This method creates a new user taking its info from the
+        login session and save it to the database """
+
+    newUser = User(name=login_session['username'], email=login_session[
+                   'email'], picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    """ This method gets the info of a user"""
+
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    """ This method returns the user's Id """
+
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except Exception:
+        return None
 
 
 # Login page
@@ -58,7 +90,8 @@ def showLogin():
 def gconnect():
     """ This method allows the user to login using google plus """
     # Validate state token
-    # The token sent from the user should be the same as the token sent from the server
+    # The token sent from the user should be
+    # the same as the token sent from the server
     if request.args.get('state') != login_session['state']:
         # The tokens is not match
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -128,6 +161,14 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    # ADD PROVIDER TO LOGIN SESSION
+    login_session['provider'] = 'google'
+
+    # see if user exists, if it doesn't make a new one
+    user_id = getUserID(data["email"])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '
@@ -146,33 +187,35 @@ def gconnect():
 # Disconnect route => Logout
 @app.route('/gdisconnect')
 def gdisconnect():
-    # Only disconnect a connected user.
-    access_token = login_session.get('access_token')
-    if access_token is None:
-        print 'Access Token is None'
+    # only disconnect a connected user
+    credentials = login_session.get('credentials')
+    if credentials is None:
         response = make_response(
-            json.dumps('Current user is not connected.'), 401)
-        response.headers['Content-Type'] = 'application/json'
+            json.dumps('Current user not connected.'), 401)
+        response.headers['Content-type'] = 'application/json'
         return response
-    # Revoke current token
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    # execute HTTP GET request to revoke current token
+    access_token = credentials.access_token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token  # noqa
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
     if result['status'] == '200':
-        # Reset user's session
-        del login_session['access_token']
+        # reset the user's session
+        del login_session['credentials']
         del login_session['gplus_id']
         del login_session['username']
         del login_session['email']
         del login_session['picture']
+
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
+
     else:
-        # Token is invalid
+        # token given is invalid
         response = make_response(
-            json.dumps('Failed to revoke token for given user.', 400))
+            json.dumps('Failed to revoke token for given user.'), 400)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -223,10 +266,8 @@ def editRestaurant(restaurant_id):
 
     if 'username' not in login_session:
         return redirect('/login')
-        
     editedRestaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
-
     if request.method == 'POST':
         if request.form['name']:
             editedRestaurant.name = request.form['name']
@@ -250,10 +291,8 @@ def deleteRestaurant(restaurant_id):
 
     if 'username' not in login_session:
         return redirect('/login')
-        
     deletedRestaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
-
     if request.method == 'POST':
         session.delete(deletedRestaurant)
         session.commit()
@@ -296,10 +335,8 @@ def newMenuItem(restaurant_id):
 
     if 'username' not in login_session:
         return redirect('/login')
-        
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
-
     if request.method == 'POST':
         newItem = MenuItem(
             name=request.form['name'],
@@ -327,7 +364,6 @@ def editMenuItem(restaurant_id, menu_id):
 
     if 'username' not in login_session:
         return redirect('/login')
-        
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
@@ -359,7 +395,6 @@ def deleteMenuItem(restaurant_id, menu_id):
 
     if 'username' not in login_session:
         return redirect('/login')
-        
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
