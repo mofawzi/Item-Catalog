@@ -1,0 +1,68 @@
+<html>
+	<body>
+		<div>
+			<h1>{{ restaurant.name }}</h1>
+		</div>
+		{% if items !=[] %}	
+		<ul>
+			<li>
+				<h2>Appetizers</h2>
+				<ol>
+					{% for item in items %}
+					{% if item.course == 'Appetizer' %}
+					<li>	
+						<h3> <strong> {{ item.name }} </strong></h3>
+						<strong> Price: {{ item.price }} </strong> <br>
+						<strong> Description: {{ item.description }} </strong><br>
+					</li>
+					{% endif %}
+					{% endfor %}
+				</ol>
+			</li>
+			<li>			
+				<h2>Entrees</h2>
+				<ol>
+					{% for item in items %}
+					{% if item.course == 'Entree' %}
+						<li>
+							<h3> <strong> {{ item.name }} </strong></h3>
+							<strong> Price: {{ item.price }} </strong> <br>
+							<strong> Description: {{ item.description }} </strong><br>
+						</li>
+					{% endif %}
+					{% endfor %}
+				</ol>
+			</li>
+			<li>
+				<h2>Desserts</h2>
+				<ol>
+					{% for item in items %}
+					{% if item.course == 'Dessert' %}
+						<li>
+							<h3> <strong> {{ item.name }} </strong></h3>
+							<strong> Price: {{ item.price }} </strong> <br>
+							<strong> Description: {{ item.description }} </strong><br>
+						</li>
+					{% endif %}
+					{% endfor %}
+				</ol>
+			</li>
+			<li>
+				<h2>Beverages</h2>
+				<ol>
+					{% for item in items %}
+					{% if item.course == 'Beverage' %}
+						<li>
+							<h3> <strong> {{ item.name }} </strong></h3>
+							<strong> Price: {{ item.price }} </strong> <br>
+							<strong> Description: {{ item.description }} </strong><br>
+						</li>
+					{% endif %}
+					{% endfor %}
+				</ol>
+			</li>
+		</ul>
+		{% endif %}
+	</body>
+</html>
+	

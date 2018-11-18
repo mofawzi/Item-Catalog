@@ -242,6 +242,7 @@ def gdisconnect():
     # Reset login_session
     if result['status'] == '200':
         del login_session['access_token']
+        del login_session['credentials']
         del login_session['gplus_id']
         del login_session['username']
         del login_session['email']
@@ -383,7 +384,14 @@ def showMenu(restaurant_id):
     items = session.query(MenuItem).filter_by(
         restaurant_id=restaurant_id).all()
 
-    return render_template('menu.html', items=items, restaurant=restaurant)
+    if 'username' not in login_session:
+        return render_template(
+            'publicMenu.html',
+            restaurant=restaurant, items=items)
+    else:
+        return render_template(
+            'menu.html',
+            restaurants=restaurants, items=items)
 
 
 # Create new menu item route
