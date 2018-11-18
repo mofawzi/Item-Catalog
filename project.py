@@ -394,6 +394,27 @@ def showMenu(restaurant_id):
             restaurants=restaurants, items=items)
 
 
+# Read specific item
+@app.route(
+    '/restaurant/<int:restaurant_id>/menu/<int:menu_item_id>/',
+    methods=['GET', 'POST'])
+def showMenuItem(restaurant_id, menu_item_id):
+    """This method returns information of a
+    specific menu item"""
+
+    restaurant = session.query(Restaurant).filter_by(
+        id=category_id).one()
+
+    item = session.query(
+        MenuItem).filter_by(id=menu_item_id).one()
+
+    creator = getUserInfo(restaurant.user_id)
+
+    return render_template(
+        'menuItem.html',
+        restaurant=restaurant, item=item, creator=creator)
+
+
 # Create new menu item route
 @app.route(
     '/restaurant/<int:restaurant_id>/menu/new',
