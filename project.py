@@ -184,6 +184,7 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
+    # login_session['credentials'] = credentials.to_json()
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
@@ -226,36 +227,31 @@ def gdisconnect():
     """ This method disconnects a connected user
     and resets the login session """
 
-    # only disconnect a connected user
-    credentials = login_session.get('credentials')
-
-    if credentials is None:
-        response = make_response(
-            json.dumps('Current user not connected.'), 401)
-        response.headers['Content-type'] = 'application/json'
+    # Only disconnect a connected user
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        response = make_response(json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
         return response
-    # execute HTTP GET request to revoke current token
-    access_token = credentials.access_token
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token  # noqa
+
+    # Execute HTTP GET request to revoke current token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
+    # Reset login_session
     if result['status'] == '200':
-        # reset the user's session
-        del login_session['credentials']
+        del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
-
     else:
-        # token given is invalid
-        response = make_response(
-            json.dumps('Failed to revoke token for given user.'), 400)
+        # Token given is invalid
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -268,17 +264,17 @@ def showRestaurants():
     from the database and show them to the users """
 
     restaurants = session.query(Restaurant)
-    items = session.query(MenuItem).order_by(MenuItem.id.desc())
-    quantity = items.count()
+    items = (session.query(MenuItem).order_by(
+        MenuItem.id.desc()).limit(10).all())
 
     if 'username' not in login_session:
         return render_template(
             'publicRestaurants.html',
-            restaurants=restaurants, items=items, quantity=quantity)
+            restaurants=restaurants, items=items)
     else:
         return render_template(
             'restaurants.html',
-            restaurants=restaurants, items=items, quantity=quantity)
+            restaurants=restaurants, items=items)
 
 
 # Create restaurant route
