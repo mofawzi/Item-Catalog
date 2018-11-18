@@ -391,7 +391,7 @@ def showMenu(restaurant_id):
     else:
         return render_template(
             'menu.html',
-            restaurants=restaurants, items=items)
+            restaurant=restaurant, items=items)
 
 
 # Read specific item
@@ -403,7 +403,7 @@ def showMenuItem(restaurant_id, menu_item_id):
     specific menu item"""
 
     restaurant = session.query(Restaurant).filter_by(
-        id=category_id).one()
+        id=restaurant_id).one()
 
     item = session.query(
         MenuItem).filter_by(id=menu_item_id).one()
