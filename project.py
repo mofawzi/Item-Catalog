@@ -347,14 +347,16 @@ def showMenu(restaurant_id):
     items = session.query(MenuItem).filter_by(
         restaurant_id=restaurant_id).all()
 
+    quantity = len(items)
+
     if 'username' not in login_session:
         return render_template(
             'publicMenu.html',
-            restaurant=restaurant, items=items)
+            restaurant=restaurant, items=items, quantity=quantity)
     else:
         return render_template(
             'menu.html',
-            restaurant=restaurant, items=items)
+            restaurant=restaurant, items=items, quantity=quantity)
 
 
 # Read specific item

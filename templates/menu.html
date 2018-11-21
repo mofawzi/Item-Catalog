@@ -3,7 +3,7 @@
         <title>Menu Items</title>
     </head>
     <body>
-        <h1>Restaurant: {{restaurant.name}}</h1>
+        <h1>Restaurant: {{restaurant.name}} ( {{ quantity }} items )</h1>
 
         {% with messages = get_flashed_messages() %}
         {% if messages %}
