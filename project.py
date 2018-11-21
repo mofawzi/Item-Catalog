@@ -1,6 +1,5 @@
 #!/usr/bin/env python2.7
 
-
 from flask import Flask, render_template, request, redirect, url_for
 from flask import flash, jsonify
 
@@ -83,14 +82,14 @@ def getUserID(email):
         return None
 
 
-# def checkAuthorization(loginSession, restaurantOrItem):
-#     """ This method checks if a user is authorized to edit
-#     or delete a restaurant or an item """
+def checkAuthorization(loginSession, restaurantOrItem):
+    """ This method checks if a user is authorized to edit
+    or delete a restaurant or an item """
 
-#     if restaurantOrItem.user_id != loginSession['user_id']:
-#         return True
-#     else:
-#         return False
+    if restaurantOrItem.user_id != loginSession['user_id']:
+        return True
+    else:
+        return False
 
 
 # Login required decorator
@@ -102,7 +101,6 @@ def login_required(f):
             return redirect(url_for('showLogin'))
         return f(*args, **kwargs)
     return decorated_function
-
 
 
 # Login page
@@ -230,12 +228,14 @@ def gdisconnect():
     # Only disconnect a connected user
     access_token = login_session.get('access_token')
     if access_token is None:
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # Execute HTTP GET request to revoke current token
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = ('https://accounts.google.com/o/oauth2/revoke?token=%s'
+           % login_session['access_token'])
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
@@ -247,12 +247,14 @@ def gdisconnect():
         del login_session['email']
         del login_session['picture']
         return redirect(url_for('showRestaurants'))
-        # response = make_response(json.dumps('Successfully disconnected.'), 200)
+        # response = make_response(
+        #           json.dumps('Successfully disconnected.'), 200)
         # response.headers['Content-Type'] = 'application/json'
         # return response
     else:
         # Token given is invalid
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(
+                json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -314,12 +316,11 @@ def editRestaurant(restaurant_id):
     editedRestaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
-    # # Check if the user is authorized or not
-    # if editedRestaurant.user_id != login_session['user_id']:
-    #     return """<script>function myFunction()
-    #                 {alert('You are not authorized to edit this restaurant.
-    #                  Please create your own restaurant in order to edit.')}
-    #                 </script><body onload='myFunction()'>"""
+    # Check the authorization of the user
+    if checkAuthorization(login_session, editedRestaurant):
+        return """<script>function myFunction() {
+              alert('You are not authorized!')}</script>
+              <body onload='myFunction()'>"""
 
     if request.method == 'POST':
         if request.form['name']:
@@ -347,12 +348,11 @@ def deleteRestaurant(restaurant_id):
     deletedRestaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
-    # # Check if the user is authorized or not
-    # if deletedRestaurant.user_id != login_session['user_id']:
-    #     return """<script>function myFunction()
-    #                 {alert('You are not authorized to delete this restaurant.
-    #                 Please create your own restaurant in order to delete.')}
-    #                 </script><body onload='myFunction()'>"""
+    # Check the authorization of the user
+    if checkAuthorization(login_session, deletedRestaurant):
+        return """<script>function myFunction() {
+                alert('You are not authorized!')}</script>
+                <body onload='myFunction()'>"""
 
     if request.method == 'POST':
         session.delete(deletedRestaurant)
@@ -427,13 +427,11 @@ def newMenuItem(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
-    # # Check if the user is authorized or not
-    # if restaurant.user_id != login_session['user_id']:
-    #     return """<script>function myFunction()
-    #             {alert('You are not authorized to add menu items
-    #             to this restaurant. Please create your own restaurant
-    #             in order to add items.')}
-    #             </script><body onload='myFunction()'>"""
+    # Check the authorization of the user
+    if checkAuthorization(login_session, restaurant):
+        return """<script>function myFunction() {
+                alert('You are not authorized!')}</script>
+                <body onload='myFunction()'>"""
 
     if request.method == 'POST':
         newItem = MenuItem(
@@ -468,13 +466,11 @@ def editMenuItem(restaurant_id, menu_id):
     editedItem = session.query(MenuItem).filter_by(
         id=menu_id, restaurant_id=restaurant.id).one()
 
-    # # Check if the user is authorized or not
-    # if restaurant.user_id != login_session['user_id']:
-    #     return """<script>function myFunction()
-    #         {alert('You are not authorized to edit menu items
-    #         of this restaurant. Please create your own restaurant
-    #         in order to edit items.')}
-    #         </script><body onload='myFunction()'>"""
+    # Check the authorization of the user
+    if checkAuthorization(login_session, restaurant):
+        return """<script>function myFunction() {
+                alert('You are not authorized!')}</script>
+                <body onload='myFunction()'>"""
 
     if request.method == 'POST':
         editedItem.name = request.form['name']
@@ -499,20 +495,18 @@ def editMenuItem(restaurant_id, menu_id):
 def deleteMenuItem(restaurant_id, menu_id):
     """ This method should Delete a menu item of a restaurant
     from the database """
-    
+
     restaurant = session.query(Restaurant).filter_by(
         id=restaurant_id).one()
 
     deletedItem = session.query(MenuItem).filter_by(
         id=menu_id, restaurant_id=restaurant.id).one()
 
-    #  # Check if the user is authorized or not
-    # if restaurant.user_id != login_session['user_id']:
-    #     return """<script>function myFunction()
-    #             {alert('You are not authorized to delete menu items
-    #             of this restaurant. Please create your own restaurant
-    #             in order to delete items.')}
-    #             </script><body onload='myFunction()'>"""
+    # Check the authorization of the user
+    if checkAuthorization(login_session, restaurant):
+        return """<script>function myFunction() {
+                    alert('You are not authorized!')}</script>
+                    <body onload='myFunction()'>"""
 
     if request.method == 'POST':
         session.delete(deletedItem)

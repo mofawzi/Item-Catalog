@@ -3,7 +3,7 @@
         <title>Restaurants</title>
     </head>
     <body>
-        <p> <h1>Restaurants</h1></p>
+        <p><h1>Restaurants</h1></p>
 
         <p> <a href="{{url_for('gdisconnect')}}"><button>Logout</button></a> </p>
 
@@ -39,10 +39,12 @@
         {% endif %}
 
         {% if items %}
-            <h3>Latest Items</h3>
+            <p><h1>Latest Items</h1></p>
             {% for item in items %}
                 <ul> 
-                    <h3>{{item.name}}</a><br><small>({{ item.restaurant.name }})</small>
+                    <!-- <h3>{{item.name}}</a><br><small>({{ item.restaurant.name }})</small> -->
+                    <h3><a href = "{{url_for('showMenuItem', restaurant_id = item.restaurant_id, menu_item_id=item.id)}}">{{item.name}}</a></h3>
+                    ({{ item.restaurant.name }})
                 </ul>
             {% endfor %}
         {% endif %}
