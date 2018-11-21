@@ -6,14 +6,18 @@
    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
   </script>
 
-<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
 
 <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
-
+  <style>
+    body{
+      text-align: center;
+    }
+  </style>
 </head>
 
-<body>  
-
+<body>
+  <div id="loginTag"><h2>Please Login</h2></div>
 
 <!-- GOOGLE PLUS SIGN IN-->
 
@@ -37,6 +41,7 @@ function signInCallback(authResult) {
   if (authResult['code']) {
     // Hide the sign-in button now that the user is authorized
     $('#signinButton').attr('style', 'display: none');
+    $('#loginTag').attr('style', 'display: none');
     /* Send the one-time-use code to the server, if the server responds,
         write a 'login successful' message to the web page
         and then redirect back to the main restaurants page */
