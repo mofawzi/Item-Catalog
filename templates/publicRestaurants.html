@@ -5,9 +5,9 @@
     <body>
         <p> <h1>Restaurants</h1></p>
 
-        <p><button><a href="{{url_for('showLogin')}}">Login</a></button></p>
+        <p> <a href="{{url_for('showLogin')}}"><button>Login</button></a> </p>
 
-        <button><a href = '{{url_for('restaurantsJSON') }}'>JSON View</a></button> 
+        <p> <a href = "{{url_for('restaurantsJSON')}}"><button>JSON View</button></a> </p>
         
         {% if restaurants %}
             <ul>

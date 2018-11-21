@@ -16,9 +16,9 @@
         {% endif %}
         {% endwith %}
 
-        <button><a href = '{{url_for('newMenuItem', restaurant_id = restaurant.id) }}'>Add New Item</a></button><br><br>
+        <a href="{{url_for('newMenuItem', restaurant_id = restaurant.id) }}"><button>Add Item</button></a><br><br>
 
-        <button><a href = '{{url_for('restaurantMenuJSON', restaurant_id = restaurant.id) }}'>JSON View</a></button> 
+        <a href="{{url_for('restaurantMenuJSON', restaurant_id = restaurant.id) }}"><button>JSON View</button></a>
         {% if items %}
             <ul>
                 {% for item in items %}
@@ -26,9 +26,9 @@
                     <strong> Price: {{ item.price }} </strong> <br>
                     <strong> Description: {{ item.description }} </strong><br>
                     <strong> Course: {{ item.course }} </strong><br>
-                    <button><a href='{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}' >Edit</a></button> 
-                    <button><a href='{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}' >Delete</a></button>
-                    <button><a href='{{url_for('menuItemJSON',restaurant_id = restaurant.id, menu_id=item.id)}}' >JSON</a></button> 
+                    <a href="{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button>Edit</button></a>
+                    <a href="{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button>Delete</button></a>
+                    <a href="{{url_for('menuItemJSON',restaurant_id = restaurant.id, menu_id=item.id)}}"><button>JSON</button></a>
                     <br><br><br>
                 {% endfor %}
             </ul>
