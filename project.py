@@ -3,7 +3,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask import flash, jsonify
 
-
 # Database imports
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -25,11 +24,13 @@ import requests
 # Override imports
 from functools import wraps
 
+# User helpers imports
+import helpers
+
 # Create client Id
 CLIENT_ID = json.loads(
     open('secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog"
-
 
 # Use the Flask framework
 app = Flask(__name__)
@@ -42,44 +43,6 @@ Base.metadata.bind = engine
 # Create the database session to apply CRUD
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
-
-# User Helper Functions
-
-def createUser(login_session):
-    """ This method creates a new user taking its info from the
-        login session and save it to the database """
-
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
-
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(
-        email=login_session['email']).one()
-
-    return user.id
-
-
-def getUserInfo(user_id):
-    """ This method gets the info of a user """
-
-    user = session.query(User).filter_by(
-        id=user_id).one()
-
-    return user
-
-
-def getUserID(email):
-    """ This method returns the user's Id """
-
-    try:
-        user = session.query(User).filter_by(
-            email=email).one()
-
-        return user.id
-    except Exception:
-        return None
 
 
 def checkAuthorization(loginSession, restaurantOrItem):
@@ -200,9 +163,9 @@ def gconnect():
     login_session['provider'] = 'google'
 
     # see if user exists, if it doesn't make a new one
-    user_id = getUserID(data["email"])
+    user_id = helpers.getUserID(data["email"])
     if not user_id:
-        user_id = createUser(login_session)
+        user_id = helpers.createUser(login_session)
 
     login_session['user_id'] = user_id
 
@@ -408,7 +371,7 @@ def showMenuItem(restaurant_id, menu_item_id):
     item = session.query(
         MenuItem).filter_by(id=menu_item_id).one()
 
-    creator = getUserInfo(restaurant.user_id)
+    creator = helpers.getUserInfo(restaurant.user_id)
 
     return render_template(
         'menuItem.html',
