@@ -1,7 +1,8 @@
 {% extends "main.html" %}
 
-{% block content %}  
-
+{% block content %}
+    
+    <div class="flash">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
             <h3>
@@ -11,37 +12,44 @@
             </h3>
         {% endif %}
         {% endwith %}
+    </div>
 
     <div class="row">
         <div class="col-md-6"> <h2>Restaurants</h2>
-        {% if restaurants %}
-            <ul>
-                {% for restaurant in restaurants %}
-                    <!-- <li> <strong> {{ restaurant.name }} </strong> </li> -->
-                    <li>
-                        <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
+            {% if restaurants %}
+                <ul>
+                    {% for restaurant in restaurants %}
+                        <!-- <li> <strong> {{ restaurant.name }} </strong> </li> -->
+                        <li>
+                            {%if 'username' not in session %}
+                            <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
+                            {% else %}
+                            {% if session.user_id %}
+                                <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
 
-                        <a href = "{{url_for('editRestaurant',restaurant_id = restaurant.id)}}">Edit</a> | 
-                        
-                        <a href = "{{url_for('deleteRestaurant',restaurant_id = restaurant.id)}}">Delete</a> | 
-
-                        <a href = "{{url_for('restaurantJSON',restaurant_id = restaurant.id)}}">JSON</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        </div>
-
-        <div class="col-md-6"> <h2>Latest Items</h2>
-        {% if items %}
-            {% for item in items %}
-                <ul> 
-                    <!-- <h3>{{item.name}}</a><br><small>({{ item.restaurant.name }})</small> -->
-                    <h3><a href = "{{url_for('showMenuItem', restaurant_id = item.restaurant_id, menu_item_id=item.id)}}">{{item.name}}</a></h3>
-                    ({{ item.restaurant.name }})
+                                <a href = "{{url_for('editRestaurant',restaurant_id = restaurant.id)}}">Edit</a> | 
+                                
+                                <a href = "{{url_for('deleteRestaurant',restaurant_id = restaurant.id)}}">Delete</a> | 
+        
+                                <a href = "{{url_for('restaurantJSON',restaurant_id = restaurant.id)}}">JSON</a>
+                            {% endif %} 
+                            {% endif %}
+                        </li><br>
+                    {% endfor %}
                 </ul>
-            {% endfor %}
-        {% endif %}
+            {% endif %}
         </div>
-    </div>
+            <div class="col-md-6"> <h2>Latest Items</h2>
+            {% if items %}
+                {% for item in items %}
+                    <ul> 
+                        <!-- <h3>{{item.name}}</a><br><small>({{ item.restaurant.name }})</small> -->
+                        <p><a href = "{{url_for('showMenuItem', restaurant_id = item.restaurant_id, menu_item_id=item.id)}}">{{item.name}}</a></p>
+                        ({{ item.restaurant.name }})
+                    </ul>
+                {% endfor %}
+            {% endif %}
+            </div>
+        </div>
+   
 {% endblock %}

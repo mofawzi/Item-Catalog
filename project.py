@@ -178,7 +178,7 @@ def gconnect():
     output += ''' " style = "width: 300px; height: 300px;
                     border-radius: 150px;-webkit-border-radius: 150px;
                     -moz-border-radius: 150px;"> '''
-    flash("you are now logged in as %s" % login_session['username'])
+    flash("Welcom, You are now logged in as %s" % login_session['username'])
     return output
 
 
@@ -231,7 +231,7 @@ def showRestaurants():
 
     restaurants = session.query(Restaurant)
     items = (session.query(MenuItem).order_by(
-        MenuItem.id.desc()).limit(10).all())
+        MenuItem.id.desc()).limit(8).all())
 
     return render_template(
         'restaurants.html',
