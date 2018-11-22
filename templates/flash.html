@@ -1,0 +1,14 @@
+<div class="flash col-md-12">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% with message = messages[messages.__len__() - 1] %}
+                <li class="alert alert-{{ item }} alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{ message }}</strong>
+                </li>
+                {% endwith %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</div>

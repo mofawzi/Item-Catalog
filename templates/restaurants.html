@@ -2,17 +2,7 @@
 
 {% block content %}
     
-    <div class="flash">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <h3>
-                {% with message = messages[messages.__len__() - 1] %}
-                    <strong>{{message}}</strong>
-                {% endwith %}
-            </h3>
-        {% endif %}
-        {% endwith %}
-    </div>
+{% include "flash.html" %}
 
     <div class="row">
         <div class="col-md-6"> <h2>Restaurants</h2>
