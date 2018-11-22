@@ -233,14 +233,9 @@ def showRestaurants():
     items = (session.query(MenuItem).order_by(
         MenuItem.id.desc()).limit(10).all())
 
-    if 'username' not in login_session:
-        return render_template(
-            'publicRestaurants.html',
-            restaurants=restaurants, items=items)
-    else:
-        return render_template(
-            'restaurants.html',
-            restaurants=restaurants, items=items)
+    return render_template(
+        'restaurants.html',
+        restaurants=restaurants, items=items)
 
 
 # Create restaurant route
