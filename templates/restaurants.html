@@ -1,11 +1,6 @@
-<html>
-    <head>
-        <title>Restaurants</title>
-    </head>
-    <body>
-        <p><h1>Restaurants</h1></p>
+{% extends "main.html" %}
 
-        <p> <a href="{{url_for('gdisconnect')}}"><button>Logout</button></a> </p>
+{% block content %}  
 
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -17,10 +12,8 @@
         {% endif %}
         {% endwith %}
 
-        <a href="{{url_for('newRestaurant')}}"><button>Create Restaurant </button></a><br><br>
-
-        <a href="{{url_for('restaurantsJSON') }}"><button>JSON View</button></a>
-        
+    <div class="row">
+        <div class="col-md-6"> <h2>Restaurants</h2>
         {% if restaurants %}
             <ul>
                 {% for restaurant in restaurants %}
@@ -37,9 +30,10 @@
                 {% endfor %}
             </ul>
         {% endif %}
+        </div>
 
+        <div class="col-md-6"> <h2>Latest Items</h2>
         {% if items %}
-            <p><h1>Latest Items</h1></p>
             {% for item in items %}
                 <ul> 
                     <!-- <h3>{{item.name}}</a><br><small>({{ item.restaurant.name }})</small> -->
@@ -48,5 +42,6 @@
                 </ul>
             {% endfor %}
         {% endif %}
-    </body>
-</html>
+        </div>
+    </div>
+{% endblock %}
