@@ -1,18 +1,22 @@
-<html>
-    <head>
-        <title>Delete Restaurant</title>
-    </head>
-    <body>
-        <h1>Delete Restaurant: {{restaurant.name}}</h1>
+{% extends "main.html" %}
+{% block content %}
+    <div class="row banner menu">
+        <div class="col-md-12 padding-none">
+            <h1>Delete Restaurant</h1>
+            <hr>
+        </div>
+    </div>
+    <h1>Restaurant: {{restaurant.name}}</h1>
 
-        <form action="{{url_for('deleteRestaurant', restaurant_id=restaurant.id)}}" method="POST">
-            
-            <h2>Are you sure you want to delete restaurant: <strong>{{restaurant.name}}</strong> ?</h2>
+    <form action="{{url_for('deleteRestaurant', restaurant_id=restaurant.id)}}" method="POST">
+        <h2>Are you sure you want to <strong>delete</strong> restaurant: <strong>{{restaurant.name}}</strong> ?</h2>
 
-            <input type="submit" value="Delete">
-
-        </form>
+        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Delete</button><br><br>
+    </form>
         
-        <a href="{{url_for('showRestaurants')}}"><button>Cancel</button></a><br>
-    </body>
-</html>
+    <a href = "{{ url_for('showRestaurants') }}">
+        <button class="btn btn-default delete">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
+        </button>
+    </a>
+{% endblock %}

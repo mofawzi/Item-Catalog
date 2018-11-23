@@ -15,13 +15,13 @@
                             <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
                             {% else %}
                             {% if session.user_id %}
-                                <p><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></p>
+                                <h4><a href = "{{url_for('showMenu', restaurant_id = restaurant.id)}}">{{restaurant.name}}</a></h4>
 
-                                <a href = "{{url_for('editRestaurant',restaurant_id = restaurant.id)}}">Edit</a> | 
+                                <a href = "{{url_for('editRestaurant',restaurant_id = restaurant.id)}}"><button class="btn btn-info btn-sm">Edit</button></a>  
                                 
-                                <a href = "{{url_for('deleteRestaurant',restaurant_id = restaurant.id)}}">Delete</a> | 
+                                <a href = "{{url_for('deleteRestaurant',restaurant_id = restaurant.id)}}"><button class="btn btn-danger btn-sm">Delete</button></a> 
         
-                                <a href = "{{url_for('restaurantJSON',restaurant_id = restaurant.id)}}">JSON</a>
+                                <a href = "{{url_for('restaurantJSON',restaurant_id = restaurant.id)}}"><button class="btn btn-secondary btn-sm">JSON</button></a>
                             {% endif %} 
                             {% endif %}
                         </li><br>
@@ -34,12 +34,12 @@
                 {% for item in items %}
                     <ul> 
                         <!-- <h3>{{item.name}}</a><br><small>({{ item.restaurant.name }})</small> -->
-                        <p><a href = "{{url_for('showMenuItem', restaurant_id = item.restaurant_id, menu_item_id=item.id)}}">{{item.name}}</a></p>
+                        <h4><a href = "{{url_for('showMenuItem', restaurant_id = item.restaurant_id, menu_item_id=item.id)}}">{{item.name}}</a></h4>
                         ({{ item.restaurant.name }})
                     </ul>
                 {% endfor %}
             {% endif %}
-            </div>
         </div>
+    </div>
    
 {% endblock %}

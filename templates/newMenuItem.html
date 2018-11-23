@@ -1,21 +1,57 @@
-<html>
-    <head>
-        <title>New Menu</title>
-    </head>
-    <body>
-        <h1>Restaurant: {{restaurant.name}}</h1>
-        <h2>New Menu Item</h2>
-
-        <form action="{{url_for('newMenuItem', restaurant_id=restaurant.id)}}" method="POST">
-            
-            <p>Name: <input type="text" name="name" placeholder="Item name" required></p>
-            <p>Price: <input type="text" name="price" placeholder="Item price" required></p>
-            <p>Description: <input type="text" name="description" placeholder="Item description" required></p>
-            <p>Course: <input type="text" name="course" placeholder="Item course" required></p>
-
-            <input type="submit" value="Create">
-        </form>
-
-        <a href="{{url_for('showMenu', restaurant_id=restaurant.id)}}"><button>Cancel</button></a>
-    </body>
-</html>
+{% extends "main.html" %}
+{% block content %}
+<div class="row divider green">
+		<div class="col-md-12"></div>
+	</div>
+	<div class="row banner menu">
+		<div class="col-md-11 col-md-offset-1 padding-none">
+            <h1>Restaurant: {{restaurant.name}}</h1>
+			<h2>New Menu Item</h2>
+		</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1 padding-top">
+            <form action="{{url_for('newMenuItem', restaurant_id=restaurant.id)}}" method="POST">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type ="text" maxlength="50" class="form-control" name="name"placeholder="Item name" required>
+                    <label for="description">Description:</label>
+					<textarea class="form-control" maxlength="250" rows="3" name="description" placeholder="Item description" required></textarea>
+					<label for="price">Price:</label>
+					<div class="input-group">
+						<div class="input-group-addon">$</div>
+                        <input type ="text" class="form-control" maxlength="10" name="price" placeholder="Price in $" required>
+                    </div>
+					<label for="course">Course:</label>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="course" id="course1" value="Appetizer">Appetizer
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="course" id="course2" value="Entree">Entree
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="course" id="course3" value="Dessert">Dessert
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="course" id="course4" value="Beverage">Beverage
+					  </label>
+					</div>
+                    <button type="submit" class="btn btn-success" id="submit" type="submit">
+                        <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Create
+                    </button>
+            </form>
+            <a href = "{{url_for('showMenu', restaurant_id=restaurant.id)}}">
+                <button class="btn btn-default delete">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
+                </button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

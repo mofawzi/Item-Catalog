@@ -1,38 +1,40 @@
-<html>
-    <head>
-        <title>Menu Items</title>
-    </head>
-    <body>
-        <h1>Restaurant: {{restaurant.name}} ( {{ quantity }} items )</h1>
+{% extends "main.html" %}
 
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
+{% block content %}
+    
+{% include "flash.html" %}
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Restaurant: {{restaurant.name}} ( {{ quantity }} items )</h2>
 
-            <h3>
-                {% with message = messages[messages.__len__() - 1] %}
-                    <strong>{{message}}</strong>
-                {% endwith %}
-            </h3>
-        {% endif %}
-        {% endwith %}
+            <a href="{{url_for('newMenuItem', restaurant_id = restaurant.id)}}">
+                <button class="btn btn-success" id="new-menu-item">
+                    <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add Item
+                </button>
+            </a>
 
-        <a href="{{url_for('newMenuItem', restaurant_id = restaurant.id) }}"><button>Add Item</button></a><br><br>
-
-        <a href="{{url_for('restaurantMenuJSON', restaurant_id = restaurant.id) }}"><button>JSON View</button></a>
-        {% if items %}
-            <ul>
-                {% for item in items %}
-                    <li> <strong> {{ item.name }} </strong> </li><br>
-                    <strong> Price: {{ item.price }} </strong> <br>
-                    <strong> Description: {{ item.description }} </strong><br>
-                    <strong> Course: {{ item.course }} </strong><br>
-                    <a href="{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button>Edit</button></a>
-                    <a href="{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button>Delete</button></a>
-                    <a href="{{url_for('menuItemJSON',restaurant_id = restaurant.id, menu_id=item.id)}}"><button>JSON</button></a>
-                    <br><br><br>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <br>
-    </body>
-</html>
+            {% if items !=[] %}
+            <div><br>
+                <ul>
+                    {% for item in items %}
+                    <li>
+                        {%if 'username' not in session %} 
+                            <p><a href = "{{url_for('showMenuItem', restaurant_id = restaurant.id, menu_item_id=item.id)}}">{{item.name}}</a></p>
+                        {% else %}
+                        {% if session.user_id %}
+                            <p><a href = "{{url_for('showMenuItem', restaurant_id = restaurant.id, menu_item_id=item.id)}}">{{item.name}}</a></p>
+                            <a href = "{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-info btn-sm">Edit</button></a>    
+                            <a href = "{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-danger btn-sm">Delete</button></a> 
+                            <a href = "{{url_for('menuItemJSON',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-secondary btn-sm">JSON</button></a>
+                            <br><br>
+                        {% endif %} 
+                        {% endif %}
+                    </li><br>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+        
+{% endblock %}

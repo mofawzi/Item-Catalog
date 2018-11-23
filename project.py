@@ -231,7 +231,7 @@ def showRestaurants():
 
     restaurants = session.query(Restaurant)
     items = (session.query(MenuItem).order_by(
-        MenuItem.id.desc()).limit(8).all())
+        MenuItem.id.desc()).limit(10).all())
 
     return render_template(
         'restaurants.html',
@@ -344,14 +344,9 @@ def showMenu(restaurant_id):
 
     quantity = len(items)
 
-    if 'username' not in login_session:
-        return render_template(
-            'publicMenu.html',
-            restaurant=restaurant, items=items, quantity=quantity)
-    else:
-        return render_template(
-            'menu.html',
-            restaurant=restaurant, items=items, quantity=quantity)
+    return render_template(
+        'menu.html',
+        restaurant=restaurant, items=items, quantity=quantity)
 
 
 # Read specific item
