@@ -1,5 +1,9 @@
 {% extends "main.html" %}
 
+{% block title %}
+    {{restaurant.name}}'s Menu
+{% endblock %}
+
 {% block content %}
     
 {% include "flash.html" %}
@@ -7,34 +11,36 @@
         <div class="col-md-6">
             <h2>Restaurant: {{restaurant.name}} ( {{ quantity }} items )</h2>
 
-            <a href="{{url_for('newMenuItem', restaurant_id = restaurant.id)}}">
-                <button class="btn btn-success" id="new-menu-item">
-                    <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add Item
-                </button>
-            </a>
-
             {% if items !=[] %}
             <div><br>
                 <ul>
-                    {% for item in items %}
-                    <li>
-                        {%if 'username' not in session %} 
-                            <p><a href = "{{url_for('showMenuItem', restaurant_id = restaurant.id, menu_item_id=item.id)}}">{{item.name}}</a></p>
-                        {% else %}
+                    {%if 'username' not in session %} 
+                        {% for item in items %}
+                            <li>     
+                                <p><a href = "{{url_for('showMenuItem', restaurant_id = restaurant.id, menu_item_id=item.id)}}">{{item.name}}</a><br><br></p>
+                            </li>
+                        {% endfor %}
+                    {% else %}
                         {% if session.user_id %}
-                            <p><a href = "{{url_for('showMenuItem', restaurant_id = restaurant.id, menu_item_id=item.id)}}">{{item.name}}</a></p>
-                            <a href = "{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-info btn-sm">Edit</button></a>    
-                            <a href = "{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-danger btn-sm">Delete</button></a> 
-                            <a href = "{{url_for('menuItemJSON',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-secondary btn-sm">JSON</button></a>
-                            <br><br>
+                            <a href="{{url_for('newMenuItem', restaurant_id = restaurant.id)}}">
+                                    <button class="btn btn-success" id="new-menu-item">
+                                        <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add Item
+                                    </button><br><br>
+                            </a>
+                            {% for item in items %}
+                                <li>
+                                    <p><a href = "{{url_for('showMenuItem', restaurant_id = restaurant.id, menu_item_id=item.id)}}">{{item.name}}</a></p>
+                                    <a href = "{{url_for('editMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-info btn-sm">Edit</button></a>    
+                                    <a href = "{{url_for('deleteMenuItem',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-danger btn-sm">Delete</button></a> 
+                                    <a href = "{{url_for('menuItemJSON',restaurant_id = restaurant.id, menu_id=item.id)}}"><button class="btn btn-secondary btn-sm">JSON</button></a>
+                                    <br><br>
+                                </li><br>
+                            {% endfor %}
                         {% endif %} 
-                        {% endif %}
-                    </li><br>
-                    {% endfor %}
+                    {% endif %}
                 </ul>
             </div>
             {% endif %}
         </div>
     </div>
-        
 {% endblock %}
