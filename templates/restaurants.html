@@ -8,6 +8,14 @@
     
 {% include "flash.html" %}
     <div class="row">
+
+        {% if 'username' is in session %}
+            <a href="{{url_for('newRestaurant')}}">
+                <button class="btn btn-success" id="new-restaurant">
+                    <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add Restaurant
+                </button><br><br>
+            </a>
+        {% endif %} 
         <div class="col-md-6">
             <h2>Restaurants</h2>
             {% if restaurants %}
