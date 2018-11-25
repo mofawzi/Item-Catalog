@@ -1,7 +1,14 @@
 #!/usr/bin/env python2.7
 
-from flask import Flask, render_template, request, redirect, url_for
-from flask import flash, jsonify
+# Main imports
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    jsonify)
 
 # Database imports
 from sqlalchemy import create_engine
@@ -43,6 +50,12 @@ Base.metadata.bind = engine
 # Create the database session to apply CRUD
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+# Default script for non authorized users
+not_authorized = """<script>function myFunction() {
+                window.location.href = "/restaurants";
+                alert('You are not authorized!')}</script>
+                <body onload='myFunction()'>"""
 
 
 def checkAuthorization(loginSession, restaurantOrItem):
@@ -272,13 +285,11 @@ def editRestaurant(restaurant_id):
     and save the changes to the database """
 
     editedRestaurant = session.query(Restaurant).filter_by(
-        id=restaurant_id).one()
+        id=restaurant_id).one_or_none()
 
     # Check the authorization of the user
     if checkAuthorization(login_session, editedRestaurant):
-        return """<script>function myFunction() {
-              alert('You are not authorized!')}</script>
-              <body onload='myFunction()'>"""
+        return not_authorized
 
     if request.method == 'POST':
         if request.form['name']:
@@ -308,9 +319,7 @@ def deleteRestaurant(restaurant_id):
 
     # Check the authorization of the user
     if checkAuthorization(login_session, deletedRestaurant):
-        return """<script>function myFunction() {
-                alert('You are not authorized!')}</script>
-                <body onload='myFunction()'>"""
+        return not_authorized
 
     if request.method == 'POST':
         session.delete(deletedRestaurant)
@@ -384,9 +393,7 @@ def newMenuItem(restaurant_id):
 
     # Check the authorization of the user
     if checkAuthorization(login_session, restaurant):
-        return """<script>function myFunction() {
-                alert('You are not authorized!')}</script>
-                <body onload='myFunction()'>"""
+        return not_authorized
 
     if request.method == 'POST':
         newItem = MenuItem(
@@ -423,9 +430,7 @@ def editMenuItem(restaurant_id, menu_id):
 
     # Check the authorization of the user
     if checkAuthorization(login_session, restaurant):
-        return """<script>function myFunction() {
-                alert('You are not authorized!')}</script>
-                <body onload='myFunction()'>"""
+        return not_authorized
 
     if request.method == 'POST':
         editedItem.name = request.form['name']
@@ -459,9 +464,7 @@ def deleteMenuItem(restaurant_id, menu_id):
 
     # Check the authorization of the user
     if checkAuthorization(login_session, restaurant):
-        return """<script>function myFunction() {
-                    alert('You are not authorized!')}</script>
-                    <body onload='myFunction()'>"""
+        return 
 
     if request.method == 'POST':
         session.delete(deletedItem)
