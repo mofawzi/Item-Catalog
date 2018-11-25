@@ -480,7 +480,7 @@ def deleteMenuItem(restaurant_id, menu_id):
 # API Endpoints
 
 # JSON route for all restaurants
-@app.route('/restaurants/JSON')
+@app.route('/api/v1/restaurants/JSON')
 def restaurantsJSON():
     """ Method to provide all restaurants as a JSON object """
 
@@ -489,7 +489,7 @@ def restaurantsJSON():
 
 
 # JSON route for a specific restaurant
-@app.route('/restaurants/<int:restaurant_id>/JSON')
+@app.route('/api/v1/restaurants/<int:restaurant_id>/JSON')
 def restaurantJSON(restaurant_id):
     """ Method to provide a specific restaurant as a JSON object """
 
@@ -500,7 +500,7 @@ def restaurantJSON(restaurant_id):
 
 
 # JSON route for all menu items
-@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
+@app.route('/api/v1/restaurant/<int:restaurant_id>/menu/JSON')
 def restaurantMenuJSON(restaurant_id):
     """ Method to provide all menu items
     of a restaurant as a JSON object """
@@ -512,7 +512,7 @@ def restaurantMenuJSON(restaurant_id):
 
 
 # JSON route for a specific menu item
-@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/JSON')
+@app.route('/api/v1/restaurant/<int:restaurant_id>/<int:menu_id>/JSON')
 def menuItemJSON(restaurant_id, menu_id):
     """ Method to provide a specific menu item
     of a restaurant as a JSON object """
