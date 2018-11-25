@@ -21,15 +21,15 @@
 			<form action="{{url_for('editMenuItem', restaurant_id=restaurant.id, menu_id=item.id)}}" method="POST">
 				<div class="form-group">
 					<label for="name">Name:</label>
-					<input type ="text" maxlength="50" class="form-control" name="name" value="{{ item.name }}">
+					<input type ="text" maxlength="50" class="form-control" name="name" placeholder="{{ item.name }}">
 					<label for="description">Description:</label>
-					<input class="form-control" maxlength="250" rows="3" name="description" value="{{ item.description }}">
+					<input class="form-control" maxlength="250" rows="3" name="description" placeholder="{{ item.description }}">
                     <label for="price">Price:</label>
 					<div class="input-group">
 						<div class="input-group-addon">$</div>
-						<input type ="text" class="form-control" maxlength="10" name="price" value="{{ item.price }}">
-                    </div>
-                    <label for="course">Course:</label>
+						<input type ="text" class="form-control" maxlength="10" name="price" placeholder="{{ item.price }}">
+          </div>
+          <label for="course">Course:</label>
 					<div class="radio">
 					  <label>
 					    <input type="radio" name="course" id="course1" value="Appetizer" {% if item.course == 'Appetizer'%}checked{%endif%}>Appetizer
