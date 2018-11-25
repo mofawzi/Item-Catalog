@@ -19,7 +19,7 @@
             <form action="{{ url_for('editRestaurant',restaurant_id = restaurant.id)}}" method = 'POST'>
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type ="text" maxlength="50" class="form-control" name="name" value="{{ restaurant.name }}"><br>
+                    <input type ="text" maxlength="50" class="form-control" name="name" placeholder="{{ restaurant.name }}"><br>
                     <button type="submit" class="btn btn-success" id="submit" type="submit">
                             <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Update</button>
                             
