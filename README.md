@@ -35,12 +35,12 @@ This program uses third-party auth with Google. Some of the technologies used to
 - Run `vagrant up` to run the virtual machine, then `vagrant ssh` to login to the VM
 #### Running
 From the main project directory run:
--`$ sudo pip install -r requirements` - To install the required packages
--`$ database_setup.py` - To initialize the database
--`$ lotsofmenus.py` - To create dummy user, restaurants and menu items.
--`$ python app.py` - To start the application
-- Go to `http://localhost:5000/` in your browser to access the application
-- In the first time running, You must add a restaurant before adding an item
+* `$ sudo pip install -r requirements` - To install the required packages
+* `$ database_setup.py` - To initialize the database
+* `$ lotsofmenus.py` - To create a dummy user, restaurants and menu items
+* `$ python project.py` - To start the application
+* Go to `http://localhost:5000/` in your browser to access the application
+* If it is the first time running, You must add a restaurant before adding an item
 
 
 ## JSON Endpoints
