@@ -235,6 +235,8 @@ def gdisconnect():
         return response
 
 
+# ##### CRUD Endpoints #####
+
 # Get all restaurants route
 @app.route('/', methods=['GET'])
 @app.route('/restaurants')
@@ -464,7 +466,7 @@ def deleteMenuItem(restaurant_id, menu_id):
 
     # Check the authorization of the user
     if checkAuthorization(login_session, restaurant):
-        return 
+        return not_authorized
 
     if request.method == 'POST':
         session.delete(deletedItem)
@@ -477,7 +479,7 @@ def deleteMenuItem(restaurant_id, menu_id):
             'deleteMenuItem.html', restaurant=restaurant, item=deletedItem)
 
 
-# API Endpoints
+# ##### API Endpoints #####
 
 # JSON route for all restaurants
 @app.route('/api/v1/restaurants/JSON')
