@@ -30,5 +30,5 @@ SecretStorage==2.3.1
 six==1.11.0
 SQLAlchemy==1.2.12
 unity-lens-photos==1.0
-urllib3==1.23
+urllib3==1.26.5
 Werkzeug==0.14.1
